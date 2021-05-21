@@ -97,4 +97,19 @@ Z axis : yaw: rotate left or right
        : rotate left: RF and LR > RR and LF
        : rotate right: RF and LR < RR and LF
 Up-Down: increase or decrese speed of all motors by same amount      
+
+Angles vs Tilt correlation
+      Z(into the plane)
+      |
+  LF  |   RF
+______X_______Y
+      |
+  LR  |   RR
+      |
+
+forward tilt : -X
+backward tilt: +X
+left tilt: -Y
+right tilt: +y
+clockwise rotate: -Z
 */

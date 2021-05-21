@@ -2,7 +2,9 @@
 #include "Arduino.h"
 #include "Servo.h"
 #include "common_utils.h"
-#include "motor_driver.h"
+#include "rc_comm.h"
+#include "rc_comm.cpp"
+
 
 class motor{
   private:
