@@ -4,7 +4,7 @@
 #include<Wire.h>
 #include<MPU6050_tockn.h>
 #include<Kalman.h>
-
+/*
 class gyro{
     float AccX, AccY, AccZ; 
     float gyroWeight = 0.9996;   // AcclWeight will be 1 - gyroWeight
@@ -43,4 +43,4 @@ class gyro{
         angY = mpu6050.getAngleY();
         angZ = mpu6050.getAngleZ();
     }
-};
+};*/

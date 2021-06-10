@@ -20,6 +20,16 @@ class motor{
 
   public:
     Servo ESC;
+    motor(){
+      esc_drive_min = 1;
+      esc_drive_max = 120;
+      esc_drive_float = 50;
+
+      model_drive = 0;
+      model_min_val = 0;
+      model_max_val  = 100;
+    }
+
     motor( int pin_no){
       esc_drive_min = 1;
       esc_drive_max = 120;
@@ -41,6 +51,10 @@ class motor{
       model_min_val = 0;
       model_max_val  = 100;
 
+      ESC.attach(pin_no, esc_drive_min, esc_drive_max);
+    }
+
+    void set_pin(int pin_no){
       ESC.attach(pin_no, esc_drive_min, esc_drive_max);
     }
 
@@ -68,7 +82,7 @@ class motor{
     }
 
     void map_set_drive(int drive_, int min_drive, int max_drive){
-      esc_drive_reg = map(drive, min_drive, max_drive, esc_drive_min, esc_drive_max);
+      esc_drive_reg = map(drive_, min_drive, max_drive, esc_drive_min, esc_drive_max);
     }
 
     unsigned int get_drive(){
@@ -111,8 +125,11 @@ class motor_driver{
     */
 
   public:
-    motor_driver():motors[0](LF_ESC_PIN), motors[1](LR_ESC_PIN), motors[2](RF_ESC_PIN), motors[3](RR_ESC_PIN)
-    {
+    motor_driver(){
+      motors[0].set_pin(LF_ESC_PIN);
+      motors[1].set_pin(LR_ESC_PIN);
+      motors[2].set_pin(RF_ESC_PIN);
+      motors[3].set_pin(RR_ESC_PIN);
       #if DEBUG
         Serial.println("SETUP ESCs \n");
       #endif
@@ -169,12 +186,7 @@ class motor_driver{
     void esc_drive_no_limit() {} // Normal mode driving, no clipping of PWM
 };
 
-// The model will be set to as follows
-// 0 - not at all rotating
-// 25 - Just enough to float
-// 100 - to the maximum rotation
-// This will allow us to have some headroom to slow down in one side to fall, while good enough 
-// Resolution for flying.
+
 
 class flight_controller{
   // The model will map the value from 0 to 100 (kind of %)

@@ -38,12 +38,7 @@ extern void esc_set_drive_to_float(int motor);
 extern void esc_set_drive(int motor, int drive);
 extern void map_to_esc_drive(int motor, int drive, int min_drive, int max_drive);
 inline int  esc_get_drive(int motor) { return esc_drive_reg[motor]; }
-
-// Normal mode driving, no clipping of PWM
-extern void esc_drive_no_limit();
-
-// Control the drive within a limit in case of safe mode
-extern void esc_drive_within_limit();*/
+*/
 
 #endif
 
@@ -56,7 +51,7 @@ extern void esc_drive_within_limit();*/
 #include "rc_comm.h"
 #include "motor_driver.h"
 
-// This is X fomration frame
+// This is X formation frame
 #define LF_MOTOR 0    // Left front
 #define LR_MOTOR 1    // Left rear
 #define RF_MOTOR 2    // Right front
@@ -113,3 +108,10 @@ left tilt: -Y
 right tilt: +y
 clockwise rotate: -Z
 */
+
+// The model will be set to as follows
+// 0 - not at all rotating
+// 25 - Just enough to float
+// 100 - to the maximum rotation
+// This will allow us to have some headroom to slow down in one side to fall, while good enough 
+// Resolution for flying.

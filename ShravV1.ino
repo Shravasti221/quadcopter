@@ -1,8 +1,8 @@
 #include"Arduino.h"
 #include<Servo.h>
 #include<Kalman.h>
-#include "rc_comm.cpp"
-
+#include<Wire.h>
+#include"rc_comm.cpp"
 #define I2C_SCL      A4
 #define I2C_SCLK     A5
 #define ACCELEROMETER_COEFF 0.02
@@ -11,9 +11,6 @@
 #define ENABLE_ESC 0
 #define ENABLE_RC 1
 #define ENABLE_MPU 0
-
-
-RC_Comms rc;
 
 void setup() {
   setup_indicator();
@@ -25,7 +22,7 @@ void setup() {
   #endif
 
   #if ENABLE_RC
-    rc.calibrate();       // Setup RC connection
+    calibrate_rc();       // Setup RC connection
   #endif
   
   // Setup I2C 
@@ -40,7 +37,7 @@ void setup() {
   #endif
 
 }
-
+/*
 void loop() {
   // put your main code here, to run repeatedly:
   static long int micros_after_last_rc_read = RC_READ_INTERVAL + 10;  // Force the rc to be read the first time it enters
@@ -89,4 +86,8 @@ void loop() {
   Serial.println("");
 #endif
 
+}*/
+
+void loop(){
+  loop_printRCData();
 }
