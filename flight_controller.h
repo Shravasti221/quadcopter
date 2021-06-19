@@ -1,8 +1,6 @@
 #ifndef _MOTOR_DRIVER_H
 #define _MOTOR_DRIVER_H
-
-
-
+#define _CONSTRAINED  0
 // ***************** Define the pin connection *******
 
 #define LF_ESC_PIN 3    // Left Front
@@ -10,8 +8,12 @@
 #define RF_ESC_PIN 10   // Right Front
 #define RR_ESC_PIN 9    // Right Rear
 
-#define MIN_ESC_DRIVE  0
+#define MIN_ESC_DRIVE  1
 #define MAX_ESC_DRIVE  180
+
+#define MODEL_MAX 0
+#define MODEL_MIN 120
+#define MODEL_FLOAT 25
 
 //short for minimum/maximum ESC PWM in milli seconds
 #define MIN_ESC_PWM_IN_MS    900
@@ -28,17 +30,6 @@
 #define RR_ESC_INDEX 3
 
 #define MAX_TILT_ANGLE 
-// Current value of esc drive
-/*extern unsigned int esc_drive_float[4];
-extern unsigned int esc_drive_reg[4]; // Current value of esc drive 
-
-// Funtions 
-extern void setup_ESCs ();
-extern void esc_set_drive_to_float(int motor);
-extern void esc_set_drive(int motor, int drive);
-extern void map_to_esc_drive(int motor, int drive, int min_drive, int max_drive);
-inline int  esc_get_drive(int motor) { return esc_drive_reg[motor]; }
-*/
 
 #endif
 
@@ -49,7 +40,6 @@ inline int  esc_get_drive(int motor) { return esc_drive_reg[motor]; }
 #include "common_utils.h"
 //#include "gyro_data.h"
 #include "rc_comm.h"
-#include "motor_driver.h"
 
 // This is X formation frame
 #define LF_MOTOR 0    // Left front
