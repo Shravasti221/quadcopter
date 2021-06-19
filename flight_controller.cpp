@@ -4,11 +4,57 @@
 #include "common_utils.h"
 #include "rc_comm.h"
 #include "rc_comm.cpp"
+#include<Wire.h>
+#include<MPU6050_tockn.h>
 
 #if _CONSTRAINED
   int UB = MAX_ESC_DRIVE;
   int LB = MIN_ESC_DRIVE;
 #endif
+
+class gyroscope{
+  public:
+    float AccX, AccY, AccZ; 
+    float Xangle, Yangle, Zangle;
+    float gyroWeight = 0.9996;   // AcclWeight will be 1 - gyroWeight
+    float dampenWeight = 0.9;    // Used as a dampner parameter
+    float currentMpuTime;
+    MPU6050 mpu6050;
+
+    gyro():mpu6050(Wire, ACCELEROMETER_COEFF, GYROSCOPE_COEFF){
+        AccX = 0;
+        AccY = 0;
+        AccZ = 0;
+        Xangle = 0;
+        Yangle  = 0;
+        Zangle = 0;
+        Wire.begin();
+        mpu6050.begin();
+        mpu6050.calcGyroOffsets(true);
+
+    }
+
+    int update_mpu(){
+        mpu6050.update();
+        AccX = mpu6050.getAccX();
+        AccY = mpu6050.getAccY());
+        AccZ = mpu6050.getAccZ());
+    
+        Xangle = mpu6050.getAngleX();
+        Yangle = mpu6050.getAngleY();
+        Zangle = mpu6050.getAngleZ();
+    }
+
+    void print_vals(){
+        Serial.print("angleX : ");
+        Serial.print(Xangle);
+        Serial.print("\tangleY : ");
+        Serial.print(Yangle);
+        Serial.print("\tangleZ : ");
+        Serial.println(Zangle);
+    }
+};
+
 
 class motor{
   private:
@@ -118,9 +164,11 @@ class flight_controller{
   int   model_float_value;
   float lastCtlLoopTime = 0;
   int lb, ub; //for speed of motors
-  float xv_target, yv_target, zv_target ;          // Calculated value mostly, to help driving ESCs
+  //float xv_target, yv_target, zv_target ;          // Calculated value mostly, to help driving ESCs
   float rotor_mean;
   float x_tilt, y_tilt, z_tilt;
+  gyroscope gyro;
+  int count;//for debug and print
 
   motor motors[4]; //the individual motors;
   /*
@@ -158,19 +206,18 @@ class flight_controller{
       // We do not wait here, but at the main loop to make sure there is no load delay
     //motors tested
 
-    model_float_value = 25 ;
+    model_float_value =  MODEL_FLOAT;
 
     lastCtlLoopTime = 0;
     xv_target = 0, yv_target = 0, zv_target = 0;
   }
 
-
   void calculate_flight_targets() {
     //throttle value decides mean speed
     rotor_mean = map(rc_throttle(), MIN_RC_THROTTLE, MAX_RC_THROTTLE, MODEL_MIN, MODEL_MAX);
 
-    x_tilt = map(rc_elevator(), MIN_RC_ELEVATOR, MAX_RC_ELEVATOR, -100, 100);//forward -X
-    y_tilt = map(rc_aileron(), MIN_RC_ROLL, MAX_RC_ROLL, -100, 100);//left -Y
+    x_tilt = map(rc_elevator(), MIN_RC_ELEVATOR, MAX_RC_ELEVATOR, -5, 5);//forward -X
+    y_tilt = map(rc_aileron(), MIN_RC_ROLL, MAX_RC_ROLL, -5, 5);//left -Y
     z_tilt = map(rc_rudder(), MIN_RC_RUDDER, MAX_RC_THROTTLE, -50, 50);//clockwise -Z
   }
 
@@ -193,8 +240,16 @@ class flight_controller{
     indicate_glow();
   }
 
-  void set_drives(){
-    
+  void set_model_drives(){
+     int motor_avg = 0;
+     for(int i = 0; i< 4; i++){
+       motor_avg += motor[i].getdrive(); 
+     }
+  }
+
+  void drive(){
+    for(int i = 0; i<4; i++)
+      motor[i].drive();
   }
 
   /******************************************************************/
@@ -204,15 +259,36 @@ class flight_controller{
     for (int i=0; i < 4; i++)
         map_to_esc_drive(i, model_drive[i], model_min[i], model_max[i]);
   }
-  
-  // This function assumes the input data is already ready - RC/internal touch points for direction, MPU / Compass for stability/feedback
+
+  void print_vals(){
+    Serial.print("Motor LF speed: ");Serial.println(motor[LF_ESC_INDEX]);
+    Serial.print("\t RF speed: ");Serial.println(motor[RF_ESC_INDEX]);
+    Serial.print("\t LR speed: ");Serial.println(motor[LR_ESC_INDEX]);
+    Serial.print("\t LF speed: ");Serial.println(motor[RR_ESC_INDEX]);
+  }
   
   void run_flight_controller() {
 /*set a max angle above which we can't tilt the drone. 
 when we move it and it starts tilting if the tilt angle 
 is more than the max value then we set the drone to float 
 */
+    update_gyro();
     calculate_flight_targets();
+    update_gyro();
     drive();
   }
-}fc;
+  #if DEBUG
+  void debug_run_flight_controller() {
+    update_gyro();
+    calculate_flight_targets();
+    set_model_drive();
+    count++;
+    if(count == 10){
+      gyro.print_vals();
+      RC_print_vals();
+      print_vals();
+      count = count %10;
+    }
+  }
+  #endif
+};

@@ -4,8 +4,8 @@
 #include<Wire.h>
 #include<MPU6050_tockn.h>
 #include<Kalman.h>
-/*
-class gyro{
+
+class gyroscope{
     float AccX, AccY, AccZ; 
     float gyroWeight = 0.9996;   // AcclWeight will be 1 - gyroWeight
     float dampenWeight = 0.9;    // Used as a dampner parameter
@@ -19,10 +19,13 @@ class gyro{
         angX = 0;
         angY  = 0;
         angZ = 0;
+        Wire.begin();
+        mpu6050.begin();
+        mpu6050.calcGyroOffsets(true);
 
     }
 
-    void update_mpu(){
+    int update_mpu(){
         mpu6050.update();
         AccX = mpu6050.getAccX();
         AccY = mpu6050.getAccY());
@@ -43,4 +46,8 @@ class gyro{
         angY = mpu6050.getAngleY();
         angZ = mpu6050.getAngleZ();
     }
-};*/
+
+    void print_mpu_6050(){
+
+    }
+};

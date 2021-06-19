@@ -89,5 +89,5 @@ void loop() {
 }*/
 
 void loop(){
-  loop_printRCData();
+  fc.debug_run_flight_controller();
 }

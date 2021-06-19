@@ -13,7 +13,7 @@
 
 #define MODEL_MAX 0
 #define MODEL_MIN 120
-#define MODEL_FLOAT 25
+#define MODEL_FLOAT 40
 
 //short for minimum/maximum ESC PWM in milli seconds
 #define MIN_ESC_PWM_IN_MS    900
@@ -101,7 +101,7 @@ clockwise rotate: -Z
 
 // The model will be set to as follows
 // 0 - not at all rotating
-// 25 - Just enough to float
+// 40 - Just enough to float
 // 100 - to the maximum rotation
 // This will allow us to have some headroom to slow down in one side to fall, while good enough 
 // Resolution for flying.
