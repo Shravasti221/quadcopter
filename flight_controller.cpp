@@ -165,7 +165,7 @@ class flight_controller{
   float lastCtlLoopTime = 0;
   int lb, ub; //for speed of motors
   //float xv_target, yv_target, zv_target ;          // Calculated value mostly, to help driving ESCs
-  float rotor_mean;
+  float motor_mean;
   float x_tilt, y_tilt, z_tilt;
   gyroscope gyro;
   int count;//for debug and print
@@ -219,11 +219,13 @@ class flight_controller{
     x_tilt = map(rc_elevator(), MIN_RC_ELEVATOR, MAX_RC_ELEVATOR, -5, 5);//forward -X
     y_tilt = map(rc_aileron(), MIN_RC_ROLL, MAX_RC_ROLL, -5, 5);//left -Y
     z_tilt = map(rc_rudder(), MIN_RC_RUDDER, MAX_RC_THROTTLE, -50, 50);//clockwise -Z
+
+
   }
 
   void reset_angles(){
     for(i = 0; i<4; i++){
-      motors[i].float()
+      motors[i].float_()
     }
   }
 /********************************************************************/
@@ -231,7 +233,7 @@ class flight_controller{
     if (!is_rc_alive()) {
       // In failsafe mode, so drive to a lower and slow falling mode.
       for (int i = 0; i < 4; i++) {
-        rotor[i].set_model_drive( model_float_value);  //25
+        motors[i].set_model_drive( model_float_value);  //25
       }
       indicate_off();
       return;
@@ -245,6 +247,10 @@ class flight_controller{
      for(int i = 0; i< 4; i++){
        motor_avg += motor[i].getdrive(); 
      }
+     motor_avg = motor_avg <<2;
+
+     if(x_tilt )
+     
   }
 
   void drive(){
@@ -275,6 +281,7 @@ is more than the max value then we set the drone to float
     update_gyro();
     calculate_flight_targets();
     update_gyro();
+    set-model_drives();
     drive();
   }
   #if DEBUG
