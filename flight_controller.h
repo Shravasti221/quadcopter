@@ -1,5 +1,9 @@
-#ifndef _MOTOR_DRIVER_H
-#define _MOTOR_DRIVER_H
+#ifndef _FLIGHT_CONTROLLER_H
+#define _FLIGHT_CONTROLLER_H
+#include "Arduino.h"
+#include "common_utils.h"
+#include "rc_comm.h"
+
 #define _CONSTRAINED  0
 // ***************** Define the pin connection *******
 
@@ -31,12 +35,6 @@
 
 #define MAX_TILT_ANGLE 
 
-#endif
-
-
-#ifndef _FLIGHT_CONTROLLER_H
-#define _FLIGHT_CONTROLLER_H
-
 #include "common_utils.h"
 //#include "gyro_data.h"
 #include "rc_comm.h"
@@ -47,16 +45,85 @@
 #define RF_MOTOR 2    // Right front
 #define RR_MOTOR 3    // Right rear
 
+class flight_controller{
+  // The model will map the value from 0 to 100 (kind of %)
+  float lastCtlLoopTime;
+  int lb, ub; //for speed of motors
+  float motor_throttle;
+  float x_tilt, y_tilt, z_tilt;//target_tilt
+  float Xangle, Yangle, Zangle;//updated values from gyro;
+  static int mod2;
+
+  motor motors[4]; //the individual motors;
+  /*
+    motors[0] = &LF_ESC;
+    motors[1] = &LR_ESC;
+    motors[2] = &RF_ESC;
+    motors[3] = &RR_ESC;
+  */
+  flight_controller()
+  {
+    //testing motors
+    motors[0].set_pin(LF_ESC_PIN);
+    motors[1].set_pin(LR_ESC_PIN);
+    motors[2].set_pin(RF_ESC_PIN);
+    motors[3].set_pin(RR_ESC_PIN);
+    #if DEBUG
+      Serial.println("SETUP ESCs \n");
+    #endif
+    
+    indicate_blink (5, 500, 500);// Blink for 5 seconds
+    indicate_off();
+
+    #if DEBUG
+      Serial.print("Testing motors LF -> LR -> RF -> RR .....\n");
+    #endif      
+
+    for(int i = 0; i<4; i++)
+      motors[i].test();
+      
+    #if DEBUG
+      Serial.println("Motor driver setup");
+    #endif
+      // We do not wait here, but at the main loop to make sure there is no load delay
+    //motors tested
+
+    lastCtlLoopTime = 0;
+  }
+  void calculate_flight_targets();
+  void reset2float();
+  void reset2throttler();
+  void lost_control();
+  void get_gyro_values( gyroscope &gyro);
+  void set_model_drives();
+  void drive();
+  void print_vals();
+  void run_flight_controller();
+
+};
+
+#endif
+
 // The MPU is assumed to be placed in XY plane, which is horizontal, and Y axis is front, X is towards 
 
 // **************** PID controller parameters
 // Following function will provide the calculated drive model
-extern flight_controller fc;
-
-#endif
-
-
 /*
+flight controller class:
+motor motors[4] : an array for holding the 4 motor objects
+contructor: 
+  1.sets esc pin
+  #if DDEBUG mode switched on
+  2.Print and blink
+  3.Tests every motor : LF -> LR -> RF -> RR
+calculate flight targets() has to update the target values based on the data in vars in rc.cpp
+reset_angles(): set all motors to float
+heartbeat(): Idt I have used yet
+
+gyro.h
+print_vals;
+check the updated MPU 6050 values
+
 (0) (2)     x
   \ /     z ↑
    X       \|
@@ -105,3 +172,8 @@ clockwise rotate: -Z
 // 100 - to the maximum rotation
 // This will allow us to have some headroom to slow down in one side to fall, while good enough 
 // Resolution for flying.
+
+
+
+
+

@@ -98,7 +98,7 @@ void rx_calcInput() {
 }
 
 // ****************************  Other functions *****************************
-
+//picks up the target data from the a RC
 int update_rc_data () {
   int rcChanged = 0;
   for (int i = 0; i < numMaxPinNum; i++) {
@@ -116,10 +116,7 @@ int update_rc_data () {
     }
   }
 
-#if 0
-  Serial.print("A = "); Serial.print(rc_aileron()); Serial.print(", E = "); Serial.print(rc_elevator()); 
-  Serial.print(", R = "); Serial.print(rc_rudder()); Serial.print(", T = "); Serial.print(rc_throttle()); 
-#endif
+
 
   return rcChanged;
 }

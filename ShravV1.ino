@@ -2,7 +2,8 @@
 #include<Servo.h>
 #include<Kalman.h>
 #include<Wire.h>
-#include"rc_comm.cpp"
+#include "common_utils.h"
+
 #define I2C_SCL      A4
 #define I2C_SCLK     A5
 #define ACCELEROMETER_COEFF 0.02
@@ -11,6 +12,10 @@
 #define ENABLE_ESC 0
 #define ENABLE_RC 1
 #define ENABLE_MPU 0
+
+flight_controller fc;
+
+int count = 0;
 
 void setup() {
   setup_indicator();
@@ -62,11 +67,7 @@ void loop() {
 #endif
 
 #if ENABLE_MPU
-  // Get the current reading - already filtered based on last readings prediction
-  get_filtered_mpu6050();
 
-  // instructs the gyro to calculate current values
-  estimate_current_angles();
 #endif
 
   // Based on the gyro data and RC data, calculate the model drive - does not really drives the motor 
@@ -74,7 +75,6 @@ void loop() {
 
 #if ENABLE_ESC
   // Drive actual motors, by converting model values to actual based on the HW attached
-  esc_drive_within_limit();
 #endif
 
   // Wait for some time - better use library timeout to save power
@@ -82,12 +82,28 @@ void loop() {
   if (remaining_time < TRACK_LOOP_DELAY) 
     delay(remaining_time);
 
-#if DEBUG
-  Serial.println("");
-#endif
 
 }*/
 
 void loop(){
+  count++;
   fc.debug_run_flight_controller();
+  if(!(count = count%10))
+    update_rc_data();
+    fc.calculate_flight_targets();
+  
+  #if DEBUG
+  void debug_run_flight_controller() {
+    check_gyro();
+    calculate_flight_targets();
+    set_model_drive();
+    count++;
+    if(count == 10){
+      gyro.print_vals();
+      RC_print_vals();
+      print_vals();
+      count = count %10;
+    }
+  }
+  #endif
 }
