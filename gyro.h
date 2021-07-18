@@ -14,6 +14,7 @@ class gyroscope{
     float dampenWeight;// = 0.9;    // Used as a dampner parameter
     float currentMpuTime;
     MPU6050 mpu6050;
+    
     int update_mpu();
     void print_vals();
     int check_mpu();
