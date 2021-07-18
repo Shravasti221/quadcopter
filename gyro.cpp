@@ -16,8 +16,8 @@ gyroscope::gyroscope():mpu6050(Wire){
 int gyroscope::check_mpu(){
         mpu6050.update();
         AccX = mpu6050.getAccX();
-        AccY = mpu6050.getAccY());
-        AccZ = mpu6050.getAccZ());
+        AccY = mpu6050.getAccY();
+        AccZ = mpu6050.getAccZ();
     
         Xangle = mpu6050.getAngleX();
         Yangle = mpu6050.getAngleY();

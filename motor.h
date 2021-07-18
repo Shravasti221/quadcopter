@@ -1,3 +1,5 @@
+#ifndef MOTOR_H
+#define MOTOR_H
 #include "Arduino.h"
 #include "Servo.h"
 #include "flight_controller.h"
@@ -31,3 +33,4 @@ class motor{
     void drive();
 
 };
+#endif

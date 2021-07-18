@@ -1,7 +1,4 @@
-#include "Arduino.h"
-#include "Servo.h"
-#include "flight_controller.h"
-#include "common_utils.h"
+#include "motor.h"
 
 motor:: motor(){
   esc_drive_min = MIN_ESC_DRIVE;

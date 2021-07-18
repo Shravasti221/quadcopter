@@ -5,6 +5,37 @@
   int LB = MIN_ESC_DRIVE;
 #endif
 int flight_controller::mod2 = 0;
+
+flight_controller::flight_controller()
+  {
+    //testing motors
+    motors[0].set_pin(LF_ESC_PIN);
+    motors[1].set_pin(LR_ESC_PIN);
+    motors[2].set_pin(RF_ESC_PIN);
+    motors[3].set_pin(RR_ESC_PIN);
+    #if DEBUG
+      Serial.println("SETUP ESCs \n");
+    #endif
+    
+    indicate_blink (5, 500, 500);// Blink for 5 seconds
+    indicate_off();
+
+    #if DEBUG
+      Serial.print("Testing motors LF -> LR -> RF -> RR .....\n");
+    #endif      
+
+    for(int i = 0; i<4; i++)
+      motors[i].test(i);
+      
+    #if DEBUG
+      Serial.println("Motor driver setup");
+    #endif
+      // We do not wait here, but at the main loop to make sure there is no load delay
+    //motors tested
+
+    lastCtlLoopTime = 0;
+  }
+
 void flight_controller::calculate_flight_targets() {
   //throttle value decides mean speed
   motor_throttle = map(rc_throttle(), MIN_RC_THROTTLE, MAX_RC_THROTTLE, MODEL_MIN, MODEL_MAX);
@@ -55,12 +86,13 @@ void flight_controller::set_model_drives(){
   motor_avg = motor_avg <<2;
 
   //int threshold = 4 * (x_tilt + y_tilt + z_tilt); // i'll add this once I add z
+  //if(threshold>10) threshold = 10;
 
-  if(threshold>10) threshold = 10;
 
   //if the average speed of all the motor is too dfferent from the throttle speed reset the motor speeds to throttle speed.
-  if (!( (throttle-10) <= motor_avg || motor_avg <= (throttle+10) ))
+  if (!( (motor_throttle-10) <= motor_avg || motor_avg <= (motor_throttle+10) ))
     reset2throttle();
+    
   //if it is toppling over
   if(abs(x_tilt) > MAX_TILT_ANGLE || abs(y_tilt) > MAX_TILT_ANGLE || abs(z_tilt) > MAX_TILT_ANGLE){
     reset2float();

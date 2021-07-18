@@ -1,16 +1,19 @@
 #include"Arduino.h"
+#include "flight_controller.h"
 #include<Servo.h>
 #include<Wire.h>
 #include "common_utils.h"
+#include "rc_comm.h"
+#include "gyro.h"
 
 #define I2C_SCL      A4
 #define I2C_SCLK     A5
 #define ACCELEROMETER_COEFF 0.02
 #define GYROSCOPE_COEFF 0.98
 
-#define ENABLE_ESC 0
+#define ENABLE_ESC 0 //actually drive motors
 #define ENABLE_RC 1
-#define ENABLE_MPU 0
+#define ENABLE_MPU 1 // Enables reading
 
 flight_controller fc;
 

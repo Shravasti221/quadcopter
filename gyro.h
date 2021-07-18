@@ -16,5 +16,7 @@ class gyroscope{
     MPU6050 mpu6050;
     int update_mpu();
     void print_vals();
+    int check_mpu();
+    gyroscope();
 };
 #endif

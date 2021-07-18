@@ -4,7 +4,7 @@
 #include "common_utils.h"
 #include "rc_comm.h"
 #include "gyro.h"
-#include"motor.h"
+#include "motor.h"
 
 #define _CONSTRAINED  0
 // ***************** Define the pin connection *******
@@ -52,11 +52,11 @@ class flight_controller{
   // The model will map the value from 0 to 100 (kind of %)
   float lastCtlLoopTime;
   int lb, ub; //for speed of motors
-  float motor_throttle;
-  float x_tilt, y_tilt, z_tilt;//target_tilt
+  float motor_throttle; // current speed of all the motors
+  float x_tilt, y_tilt, z_tilt;//target_tilt from RC
   float Xangle, Yangle, Zangle;//updated values from gyro;
   static int mod2;
-
+  public:
   motor motors[4]; //the individual motors;
   /*
     motors[0] = &LF_ESC;
@@ -64,35 +64,8 @@ class flight_controller{
     motors[2] = &RF_ESC;
     motors[3] = &RR_ESC;
   */
-  flight_controller()
-  {
-    //testing motors
-    motors[0].set_pin(LF_ESC_PIN);
-    motors[1].set_pin(LR_ESC_PIN);
-    motors[2].set_pin(RF_ESC_PIN);
-    motors[3].set_pin(RR_ESC_PIN);
-    #if DEBUG
-      Serial.println("SETUP ESCs \n");
-    #endif
-    
-    indicate_blink (5, 500, 500);// Blink for 5 seconds
-    indicate_off();
-
-    #if DEBUG
-      Serial.print("Testing motors LF -> LR -> RF -> RR .....\n");
-    #endif      
-
-    for(int i = 0; i<4; i++)
-      motors[i].test();
-      
-    #if DEBUG
-      Serial.println("Motor driver setup");
-    #endif
-      // We do not wait here, but at the main loop to make sure there is no load delay
-    //motors tested
-
-    lastCtlLoopTime = 0;
-  }
+ public:
+  flight_controller();
   void calculate_flight_targets();
   void reset2float();
   void reset2throttler();
