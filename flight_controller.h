@@ -3,6 +3,8 @@
 #include "Arduino.h"
 #include "common_utils.h"
 #include "rc_comm.h"
+#include "gyro.h"
+#include"motor.h"
 
 #define _CONSTRAINED  0
 // ***************** Define the pin connection *******
@@ -38,6 +40,7 @@
 #include "common_utils.h"
 //#include "gyro_data.h"
 #include "rc_comm.h"
+#include "motor.cpp"
 
 // This is X formation frame
 #define LF_MOTOR 0    // Left front
@@ -172,8 +175,3 @@ clockwise rotate: -Z
 // 100 - to the maximum rotation
 // This will allow us to have some headroom to slow down in one side to fall, while good enough 
 // Resolution for flying.
-
-
-
-
-

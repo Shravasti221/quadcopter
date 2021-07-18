@@ -14,18 +14,6 @@ class gyroscope{
     float dampenWeight;// = 0.9;    // Used as a dampner parameter
     float currentMpuTime;
     MPU6050 mpu6050;
-    gyroscope():mpu6050(Wire){
-        AccX = 0;
-        AccY = 0;
-        AccZ = 0;
-        Xangle = 0;
-        Yangle  = 0;
-        Zangle = 0;
-        Wire.begin();
-        mpu6050.begin();
-        mpu6050.calcGyroOffsets(true);
-
-    }
     int update_mpu();
     void print_vals();
 };

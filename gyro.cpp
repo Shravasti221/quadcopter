@@ -1,15 +1,19 @@
 #include "gyro.h"
 
-class gyroscope{
-  public:
-    float AccX, AccY, AccZ; 
-    float Xangle, Yangle, Zangle;
-    float gyroWeight;// = 0.9996;   // AcclWeight will be 1 - gyroWeight
-    float dampenWeight;// = 0.9;    // Used as a dampner parameter
-    float currentMpuTime;
-    MPU6050 mpu6050;
+gyroscope::gyroscope():mpu6050(Wire){
+        AccX = 0;
+        AccY = 0;
+        AccZ = 0;
+        Xangle = 0;
+        Yangle  = 0;
+        Zangle = 0;
+        Wire.begin();
+        mpu6050.begin();
+        mpu6050.calcGyroOffsets(true);
 
-    int check_mpu(){
+    }
+
+int gyroscope::check_mpu(){
         mpu6050.update();
         AccX = mpu6050.getAccX();
         AccY = mpu6050.getAccY());
@@ -18,14 +22,13 @@ class gyroscope{
         Xangle = mpu6050.getAngleX();
         Yangle = mpu6050.getAngleY();
         Zangle = mpu6050.getAngleZ();
-    }
+}
 
-    void print_vals(){
+void gyroscope::print_vals(){
         Serial.print("angleX : ");
         Serial.print(Xangle);
         Serial.print("\tangleY : ");
         Serial.print(Yangle);
         Serial.print("\tangleZ : ");
         Serial.println(Zangle);
-    }
-};
+}
