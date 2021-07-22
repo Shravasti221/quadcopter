@@ -62,7 +62,7 @@ void flight_controller::lost_control() {
       Serial.println("RC data has not been received going into failsafe mode");
     #endif
     for (int i = 0; i < 4; i++)
-      motors[i].set_model_drive( MODEL_FLOAT - 5);
+      motors[i].set_model_drives( MODEL_FLOAT - 5);
 
     #if !DEBUG
       indicate_off();
@@ -190,6 +190,6 @@ when we move it and it starts tilting if the tilt angle
 is more than the max value then we set the drone to float 
 */
   gyro.check_mpu();
-  set-model_drives();
+  set_model_drives();
   drive();
 }
