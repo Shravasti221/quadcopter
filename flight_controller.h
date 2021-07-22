@@ -14,33 +14,8 @@
 #define RF_ESC_PIN 10   // Right Front
 #define RR_ESC_PIN 9    // Right Rear
 
-#define MIN_ESC_DRIVE  1
-#define MAX_ESC_DRIVE  180
 
-#define MODEL_MAX 0
-#define MODEL_MIN 120
-#define MODEL_FLOAT 40
-
-//short for minimum/maximum ESC PWM in milli seconds
-#define MIN_ESC_PWM_IN_MS    900
-#define MAX_ESC_PWM_IN_MS    2000
- 
-#define FLOAT_ESC_PWM_IN_MS  1400   
-//the value for which the drone is assumed to stay flying in one place
-
-
-// *** We need to adjust each of the motors, so that it gives more or less equal thrust
-#define LF_ESC_INDEX 0
-#define LR_ESC_INDEX 1
-#define RF_ESC_INDEX 2
-#define RR_ESC_INDEX 3
-
-#define MAX_TILT_ANGLE 
-
-#include "common_utils.h"
-//#include "gyro_data.h"
-#include "rc_comm.h"
-#include "motor.cpp"
+#define MAX_TILT_ANGLE 5
 
 // This is X formation frame
 #define LF_MOTOR 0    // Left front
@@ -51,6 +26,7 @@
 class flight_controller{
   // The model will map the value from 0 to 100 (kind of %)
   float lastCtlLoopTime;
+  gyroscope gyro;
   int lb, ub; //for speed of motors
   float motor_throttle; // current speed of all the motors
   float x_tilt, y_tilt, z_tilt;//target_tilt from RC
@@ -68,9 +44,9 @@ class flight_controller{
   flight_controller();
   void calculate_flight_targets();
   void reset2float();
-  void reset2throttler();
+  void reset2throttle();
   void lost_control();
-  void get_gyro_values( gyroscope &gyro);
+  void get_gyro_values();
   void set_model_drives();
   void drive();
   void print_vals();

@@ -50,9 +50,9 @@ void flight_controller::reset2float(){
     motors[i].float_();
 }
 
-void flight_controller::reset2throttler(){
+void flight_controller::reset2throttle(){
   for(int i = 0; i<4; i++)
-    motors[i].set_drive(motor_throttle);
+    motors[i].set_model_drive(motor_throttle);
 }
 /********************************************************************/
 void flight_controller::lost_control() {
@@ -62,7 +62,7 @@ void flight_controller::lost_control() {
       Serial.println("RC data has not been received going into failsafe mode");
     #endif
     for (int i = 0; i < 4; i++)
-      motors[i].set_model_drives( MODEL_FLOAT - 5);
+      motors[i].set_model_drive( MODEL_FLOAT - 5);
 
     #if !DEBUG
       indicate_off();
@@ -73,15 +73,15 @@ void flight_controller::lost_control() {
   indicate_glow();
 }
 
-void flight_controller::get_gyro_values(gyroscope &gyro){
-  Xangle = gyro->Xangle;
-  Yangle = gyro->Yangle;
-  Zangle = gyro->Zangle;
+void flight_controller::get_gyro_values(){
+  Xangle = gyro.Xangle;
+  Yangle = gyro.Yangle;
+  Zangle = gyro.Zangle;
 }
 void flight_controller::set_model_drives(){
   int motor_avg = 0; //local variable
   for(int i = 0; i< 4; i++){
-    motor_avg += motors[i].getdrive(); 
+    motor_avg += motors[i].get_model_drive(); 
   }
   motor_avg = motor_avg <<2;
 
@@ -94,7 +94,7 @@ void flight_controller::set_model_drives(){
     reset2throttle();
     
   //if it is toppling over
-  if(abs(x_tilt) > MAX_TILT_ANGLE || abs(y_tilt) > MAX_TILT_ANGLE || abs(z_tilt) > MAX_TILT_ANGLE){
+  if (abs(x_tilt) > MAX_TILT_ANGLE || abs(y_tilt) > MAX_TILT_ANGLE || abs(z_tilt) > MAX_TILT_ANGLE) {
     reset2float();
   }
 
@@ -103,70 +103,70 @@ void flight_controller::set_model_drives(){
   if(Xangle>x_tilt) //I need to bend backwards
   {
     if(mod2){
-      motors[LF_ESC_INDEX]++;
-      motors[RF_ESC_INDEX]++;
+      motors[LF_MOTOR]++;
+      motors[RF_MOTOR]++;
     }
     else{
-      motors[LR_ESC_INDEX]--;
-      motors[RR_ESC_INDEX]--;
+      motors[LR_MOTOR]--;
+      motors[RR_MOTOR]--;
     }
     
   }  
   else if(Xangle < x_tilt) //I need to bend forwards (bend forward is -x)
   {
     if(mod2){
-      motors[LF_ESC_INDEX]++;
-      motors[RF_ESC_INDEX]++;
+      motors[LF_MOTOR]++;
+      motors[RF_MOTOR]++;
     }
     else{
-      motors[LR_ESC_INDEX]--;
-      motors[RR_ESC_INDEX]--;
+      motors[LR_MOTOR]--;
+      motors[RR_MOTOR]--;
     }
   }
   
   if(Yangle>y_tilt) //I need to bend backwards
   {
     if(mod2){
-      motors[LF_ESC_INDEX]++;
-      motors[LR_ESC_INDEX]++;
+      motors[LF_MOTOR]++;
+      motors[LR_MOTOR]++;
     }
     else{
-      motors[RF_ESC_INDEX]--;
-      motors[RR_ESC_INDEX]--;
+      motors[RF_MOTOR]--;
+      motors[RR_MOTOR]--;
     }
   }  
   else if(Yangle < y_tilt) //I need to bend forwards
   {
     if(mod2){
-      motors[LF_ESC_INDEX]++;
-      motors[LR_ESC_INDEX]++;
+      motors[LF_MOTOR]++;
+      motors[LR_MOTOR]++;
     }
     else{
-      motors[RF_ESC_INDEX]--;
-      motors[RR_ESC_INDEX]--;
+      motors[RF_MOTOR]--;
+      motors[RR_MOTOR]--;
     }
   }
 
   /*if(Zangle>z_tilt) //I need to bend backwards
   {
     if(mod2){
-      motors[LF_ESC_INDEX]++;
-      motors[RF_ESC_INDEX]++;
+      motors[LF_MOTOR]++;
+      motors[RF_MOTOR]++;
     }
     else{
-      motors[LR_ESC_INDEX]--;
-      motors[RR_ESC_INDEX]--;
+      motors[LR_MOTOR]--;
+      motors[RR_MOTOR]--;
     }
   }  
   else if(Zangle < z_tilt) //I need to bend forwards
   {
     if(mod2){
-      motors[LF_ESC_INDEX]++;
-      motors[RF_ESC_INDEX]++;
+      motors[LF_MOTOR]++;
+      motors[RF_MOTOR]++;
     }
     else{
-      motors[LR_ESC_INDEX]--;
-      motors[RR_ESC_INDEX]--;
+      motors[LR_MOTOR]--;
+      motors[RR_MOTOR]--;
     }
   }*/    
     
@@ -178,10 +178,10 @@ void flight_controller::drive(){
 }
 
 void flight_controller::print_vals(){
-  Serial.print("Motor LF speed: ");Serial.println(motors[LF_ESC_INDEX]);
-  Serial.print("\t RF speed: ");Serial.println(motors[RF_ESC_INDEX]);
-  Serial.print("\t LR speed: ");Serial.println(motors[LR_ESC_INDEX]);
-  Serial.print("\t LF speed: ");Serial.println(motors[RR_ESC_INDEX]);
+  Serial.print("Motor LF speed: ");Serial.println(motors[LF_MOTOR].get_model_drive());
+  Serial.print("\t RF speed: ");Serial.println(motors[RF_MOTOR].get_model_drive());
+  Serial.print("\t LR speed: ");Serial.println(motors[LR_MOTOR].get_model_drive());
+  Serial.print("\t LF speed: ");Serial.println(motors[RR_MOTOR].get_model_drive());
 }
 
 void flight_controller::run_flight_controller() {
@@ -190,6 +190,16 @@ when we move it and it starts tilting if the tilt angle
 is more than the max value then we set the drone to float 
 */
   gyro.check_mpu();
-  set_model_drives();
+  get_gyro_values();
+  calculate_flight_targets();
+  gyro.check_mpu();
+  #if DEBUG
+    gyro.print_vals();
+    print_vals();
+  #endif
+  #if not DEBUG
+    set_model_drives();
+  #endif;
+  gyro.check_mpu();
   drive();
 }

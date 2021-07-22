@@ -1,6 +1,7 @@
 #include "motor.h"
+#include "common_utils.h"
 
-motor:: motor(){
+motor::motor(){
   esc_drive_min = MIN_ESC_DRIVE;
   esc_drive_max = MAX_ESC_DRIVE; 
   esc_drive_float = 50;
@@ -9,6 +10,7 @@ motor:: motor(){
   model_min = MODEL_MIN;
   model_max  = 100;
 }
+
 motor::motor( int pin_no){
   esc_drive_min = MIN_ESC_DRIVE;
   esc_drive_max = MAX_ESC_DRIVE;
@@ -37,15 +39,21 @@ void motor::set_pin(int pin_no){
   ESC.attach(pin_no, esc_drive_min, esc_drive_max);
 }
 
-void motor::operator ++(){
+motor& motor::operator ++(){
   if(model_drive < model_max) 
     model_drive++;
 }
-void motor::operator +=(const int val){
+
+motor& motor::operator --(){
+  if(model_drive > model_min) 
+    model_drive--;
+}
+
+motor& motor::operator +=(const int val){
   if(model_drive + val <= model_max)
     model_drive += val;
 }
-void motor::operator -=(const int val){
+motor& motor::operator -=(const int val){
   if(model_drive - val >= model_min) 
     model_drive -= val;
 }
@@ -69,11 +77,11 @@ void motor::float_(){
 }
 
 
-void motor::set_drive(int drive_){
+void motor::set_model_drive(int drive_){
   model_drive = drive_;
 }
 
-int motor::get_drive(){
+int motor::get_model_drive(){
   return model_drive;
 }
 
