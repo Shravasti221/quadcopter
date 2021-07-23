@@ -25,7 +25,7 @@ int gyroscope::check_mpu(){
 }
 
 void gyroscope::print_vals(){
-        Serial.print("angleX : ");
+        Serial.print("\nangleX : ");
         Serial.print(Xangle);
         Serial.print("\tangleY : ");
         Serial.print(Yangle);

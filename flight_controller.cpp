@@ -6,7 +6,7 @@
 #endif
 int flight_controller::mod2 = 0;
 
-flight_controller::flight_controller()
+void flight_controller::flight_controller_begin()
   {
     //testing motors
     motors[0].set_pin(LF_ESC_PIN);
@@ -36,7 +36,7 @@ flight_controller::flight_controller()
     lastCtlLoopTime = 0;
   }
 
-void flight_controller::calculate_flight_targets() {
+void flight_controller::get_flight_targets() {
   //throttle value decides mean speed
   motor_throttle = map(rc_throttle(), MIN_RC_THROTTLE, MAX_RC_THROTTLE, MODEL_MIN, MODEL_MAX);
 
@@ -78,7 +78,7 @@ void flight_controller::get_gyro_values(){
   Yangle = gyro.Yangle;
   Zangle = gyro.Zangle;
 }
-void flight_controller::set_model_drives(){
+void flight_controller::calculate_set_model_drives(){
   int motor_avg = 0; //local variable
   for(int i = 0; i< 4; i++){
     motor_avg += motors[i].get_model_drive(); 
@@ -182,6 +182,8 @@ void flight_controller::print_vals(){
   Serial.print("\t RF speed: ");Serial.println(motors[RF_MOTOR].get_model_drive());
   Serial.print("\t LR speed: ");Serial.println(motors[LR_MOTOR].get_model_drive());
   Serial.print("\t LF speed: ");Serial.println(motors[RR_MOTOR].get_model_drive());
+
+  gyro.print_vals();
 }
 
 void flight_controller::run_flight_controller() {
@@ -189,17 +191,13 @@ void flight_controller::run_flight_controller() {
 when we move it and it starts tilting if the tilt angle 
 is more than the max value then we set the drone to float 
 */
+  gyro.check_mpu();           //update gyro
+  get_gyro_values();          //update drone tilt
+  get_flight_targets(); //update from rc
+  gyro.check_mpu();           //update gyro
+  calculate_set_model_drives();         //set the drive values based on flight targets
   gyro.check_mpu();
-  get_gyro_values();
-  calculate_flight_targets();
-  gyro.check_mpu();
-  #if DEBUG
-    gyro.print_vals();
-    print_vals();
-  #endif
   #if not DEBUG
-    set_model_drives();
+    drive();
   #endif;
-  gyro.check_mpu();
-  drive();
 }

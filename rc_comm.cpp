@@ -42,7 +42,6 @@ int wait_for_receiver();
 void wait_sticks_zero();
 void register_min_max();
 void  check_to_continue(int channel, int move=150);
-void calibrate_rc();
 
 void setup_rc () {
   //// Serial.println("Setting up Remote contoller \n");

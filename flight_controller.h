@@ -41,13 +41,13 @@ class flight_controller{
     motors[3] = &RR_ESC;
   */
  public:
-  flight_controller();
-  void calculate_flight_targets();
+  void flight_controller_begin();
+  void get_flight_targets();
   void reset2float();
   void reset2throttle();
   void lost_control();
   void get_gyro_values();
-  void set_model_drives();
+  void calculate_set_model_drives();
   void drive();
   void print_vals();
   void run_flight_controller();

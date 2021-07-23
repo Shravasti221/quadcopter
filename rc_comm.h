@@ -65,5 +65,7 @@ int rc_aileron();
 int rc_elevator();
 int rc_rudder();
 int rc_throttle();
+void calibrate_rc();
+void RC_print_vals(); 
 
 #endif

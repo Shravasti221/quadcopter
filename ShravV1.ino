@@ -1,10 +1,10 @@
 #include"Arduino.h"
-#include "flight_controller.h"
 #include<Servo.h>
 #include<Wire.h>
 #include "common_utils.h"
-#include "rc_comm.cpp"
+#include "rc_comm.h"
 #include "gyro.h"
+#include "flight_controller.h"
 
 #define I2C_SCL      A4
 #define I2C_SCLK     A5
@@ -13,7 +13,6 @@
 
 #define ENABLE_ESC 0 //actually drive motors
 #define ENABLE_RC 1
-#define ENABLE_MPU 1 // Enables reading
 
 flight_controller fc;
 
@@ -24,16 +23,15 @@ void setup() {
   indicate_blink (4, 500, 500);
   Serial.begin(9600);
   Serial.println("QUADCOPTER SETUP \n");
-  #if ENABLE_ESC
-    setup_ESCs();     // setup ESC connections
-  #endif
+
+  // Setup I2C 
+  Wire.begin();
 
   #if ENABLE_RC
     calibrate_rc();       // Setup RC connection
   #endif
   
-  // Setup I2C 
-  Wire.begin();
+  fc.flight_controller_begin();
   indicate_blink(2, 250, 250);
 
 }
@@ -41,11 +39,13 @@ void setup() {
 void loop(){
   count++;
   fc.run_flight_controller();
-  if(!(count = count%10)){
-    update_rc_data();    
-    RC_print_vals();
+  if(count%10 == 0){
+    update_rc_data();   
   }  
-  fc.calculate_flight_targets();
+  if(!(count = count%30)){
+    RC_print_vals();
+    fc.print_vals();
+  }
   
 
 }

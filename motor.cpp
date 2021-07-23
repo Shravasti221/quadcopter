@@ -73,7 +73,7 @@ void motor::test(int motor_num_){
 }
 
 void motor::float_(){
-  model_drive = model_float;
+  model_drive = MODEL_FLOAT;
 }
 
 

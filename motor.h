@@ -26,7 +26,6 @@ class motor {
     unsigned int model_drive;
     unsigned int model_min;
     unsigned int model_max;
-    static unsigned int model_float;
 
   public:
     Servo ESC;
