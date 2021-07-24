@@ -164,11 +164,12 @@ void calibrate_rc() {
   Serial.print(F("Checking for valid receiver signals."));
   //Wait 10 seconds until all receiver inputs are valid
   if (wait_for_receiver()) {
-    Serial.println("Coild not detect the receiver - exiting the program");
+    Serial.println("Could not detect the receiver - exiting the program");
     exit(0);
   }
   
-  Serial.println(F(""));
+  Serial.println(F("Bypassing RC calibrarion"));
+  return;
   
   delay(2000);
   Serial.println(F("Place all sticks and subtrims in the center position within 10 seconds."));

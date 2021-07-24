@@ -19,33 +19,38 @@ flight_controller fc;
 int count = 0;
 
 void setup() {
-  setup_indicator();
-  indicate_blink (4, 500, 500);
-  Serial.begin(9600);
-  Serial.println("QUADCOPTER SETUP \n");
 
+  Serial.begin(9600);
   // Setup I2C 
   Wire.begin();
+  delay(1000);
+  Serial.println("QUADCOPTER SETUP ... \n");
+  setup_indicator();
+  indicate_blink (4, 250, 250);
 
   #if ENABLE_RC
-    calibrate_rc();       // Setup RC connection
+    setup_rc();       // Setup RC connection
   #endif
-  
-  fc.flight_controller_begin();
-  indicate_blink(2, 250, 250);
 
+  indicate_blink(10, 500, 500);
+  // fc.flight_controller_begin();
+  indicate_blink(10, 250, 250);
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop(){
+  
   count++;
-  fc.run_flight_controller();
-  if(count%10 == 0){
+  Serial.print("Loop count "); Serial.println(count);
+  // indicate_blink (2, 250, 250);
+  // fc.run_flight_controller();
+  if (count%10 == 0){
     update_rc_data();   
   }  
-  if(!(count = count%30)){
+  if (!(count = count%30)){
     RC_print_vals();
-    fc.print_vals();
+    // fc.print_vals();
   }
-  
+  delay(1000);
 
 }

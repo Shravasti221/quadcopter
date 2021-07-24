@@ -1,7 +1,7 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 #include "Arduino.h"
-#include "Servo.h"
+#include <Servo.h>
 
 #define MIN_ESC_DRIVE  1
 #define MAX_ESC_DRIVE  180

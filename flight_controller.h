@@ -32,7 +32,6 @@ class flight_controller{
   float x_tilt, y_tilt, z_tilt;//target_tilt from RC
   float Xangle, Yangle, Zangle;//updated values from gyro;
   static int mod2;
-  public:
   motor motors[4]; //the individual motors;
   /*
     motors[0] = &LF_ESC;
@@ -41,6 +40,7 @@ class flight_controller{
     motors[3] = &RR_ESC;
   */
  public:
+       flight_controller() {}
   void flight_controller_begin();
   void get_flight_targets();
   void reset2float();

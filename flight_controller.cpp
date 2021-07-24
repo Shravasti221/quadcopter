@@ -17,7 +17,7 @@ void flight_controller::flight_controller_begin()
       Serial.println("SETUP ESCs \n");
     #endif
     
-    indicate_blink (5, 500, 500);// Blink for 5 seconds
+    indicate_blink (10, 500, 500);// Blink for 5 seconds
     indicate_off();
 
     #if DEBUG
@@ -103,47 +103,47 @@ void flight_controller::calculate_set_model_drives(){
   if(Xangle>x_tilt) //I need to bend backwards
   {
     if(mod2){
-      motors[LF_MOTOR]++;
-      motors[RF_MOTOR]++;
+      ++motors[LF_MOTOR];
+      ++motors[RF_MOTOR];
     }
     else{
-      motors[LR_MOTOR]--;
-      motors[RR_MOTOR]--;
+      --motors[LR_MOTOR];
+      --motors[RR_MOTOR];
     }
     
   }  
   else if(Xangle < x_tilt) //I need to bend forwards (bend forward is -x)
   {
     if(mod2){
-      motors[LF_MOTOR]++;
-      motors[RF_MOTOR]++;
+      ++motors[LF_MOTOR];
+      ++motors[RF_MOTOR];
     }
     else{
-      motors[LR_MOTOR]--;
-      motors[RR_MOTOR]--;
+      --motors[LR_MOTOR];
+      --motors[RR_MOTOR];
     }
   }
   
   if(Yangle>y_tilt) //I need to bend backwards
   {
     if(mod2){
-      motors[LF_MOTOR]++;
-      motors[LR_MOTOR]++;
+      ++motors[LF_MOTOR];
+      ++motors[LR_MOTOR];
     }
     else{
-      motors[RF_MOTOR]--;
-      motors[RR_MOTOR]--;
+      --motors[RF_MOTOR];
+      --motors[RR_MOTOR];
     }
   }  
   else if(Yangle < y_tilt) //I need to bend forwards
   {
     if(mod2){
-      motors[LF_MOTOR]++;
-      motors[LR_MOTOR]++;
+      ++motors[LF_MOTOR];
+      ++motors[LR_MOTOR];
     }
     else{
-      motors[RF_MOTOR]--;
-      motors[RR_MOTOR]--;
+      --motors[RF_MOTOR];
+      --motors[RR_MOTOR];
     }
   }
 
@@ -197,7 +197,7 @@ is more than the max value then we set the drone to float
   gyro.check_mpu();           //update gyro
   calculate_set_model_drives();         //set the drive values based on flight targets
   gyro.check_mpu();
-  #if not DEBUG
+#if not DEBUG
     drive();
-  #endif;
+#endif
 }
