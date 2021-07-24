@@ -40,7 +40,7 @@ class flight_controller{
     motors[3] = &RR_ESC;
   */
  public:
-       flight_controller() {}
+       flight_controller();
   void flight_controller_begin();
   void get_flight_targets();
   void reset2float();

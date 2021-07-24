@@ -14,17 +14,18 @@
 #define ENABLE_ESC 0 //actually drive motors
 #define ENABLE_RC 1
 
-flight_controller fc;
 
 int count = 0;
+flight_controller* fc = NULL;
 
 void setup() {
-
+  
   Serial.begin(9600);
   // Setup I2C 
   Wire.begin();
   delay(1000);
   Serial.println("QUADCOPTER SETUP ... \n");
+  fc = new flight_controller();
   setup_indicator();
   indicate_blink (4, 250, 250);
 
@@ -33,7 +34,7 @@ void setup() {
   #endif
 
   indicate_blink(10, 500, 500);
-  // fc.flight_controller_begin();
+  fc->flight_controller_begin();
   indicate_blink(10, 250, 250);
   pinMode(LED_BUILTIN, OUTPUT);
 }
@@ -43,7 +44,7 @@ void loop(){
   count++;
   Serial.print("Loop count "); Serial.println(count);
   // indicate_blink (2, 250, 250);
-  // fc.run_flight_controller();
+  // fc->run_flight_controller();
   if (count%10 == 0){
     update_rc_data();   
   }  

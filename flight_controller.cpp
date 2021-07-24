@@ -6,6 +6,10 @@
 #endif
 int flight_controller::mod2 = 0;
 
+flight_controller::flight_controller() {
+   // empty constructor for now
+}
+
 void flight_controller::flight_controller_begin()
   {
     //testing motors
