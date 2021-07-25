@@ -26,12 +26,14 @@
 class flight_controller{
   // The model will map the value from 0 to 100 (kind of %)
   float lastCtlLoopTime;
-  gyroscope gyro;
   int lb, ub; //for speed of motors
   float motor_throttle; // current speed of all the motors
-  float x_tilt, y_tilt, z_tilt;//target_tilt from RC
+  float pitch_target, roll_target, z_tilt;//target_tilt from RC
   float Xangle, Yangle, Zangle;//updated values from gyro;
+  int   pitch_error, roll_error;  // Error value based on the target and actual, scaled.
   static int mod2;
+
+  gyroscope gyro;
   motor motors[4]; //the individual motors;
   /*
     motors[0] = &LF_ESC;
@@ -51,7 +53,6 @@ class flight_controller{
   void drive();
   void print_vals();
   void run_flight_controller();
-
 };
 
 #endif

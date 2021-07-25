@@ -29,22 +29,25 @@
 #define RC_PITCH   RC_CH6
 
 // Some hashdefs to make the code more managable
-#define MIN_RC_ELEVATOR  950
-#define MAX_RC_ELEVATOR  1950
+#define MIN_RC_ELEVATOR  1000
+#define MAX_RC_ELEVATOR  2000
 
 #define MIN_RC_THROTTLE  950
 #define MAX_RC_THROTTLE  1950
 
-#define MIN_RC_ROLL  950
-#define MAX_RC_ROLL  1950
+#define MIN_RC_ROLL  1000
+#define MAX_RC_ROLL  2000
 
-#define MIN_RC_PITCH  950
-#define MAX_RC_PITCH  1950
+#define MIN_RC_PITCH  1000
+#define MAX_RC_PITCH  2000
+
+#define MIN_RC_RUDDER  1000
+#define MAX_RC_RUDDER  2000
 
 // *********************  Get RC data  ***************
-#define RC_MIN_THROTTLE     900
+#define RC_MIN_THROTTLE     950
 #define RC_NEUTRAL_THROTTLE 1425    // this is the duration in microseconds of neutral throttle on an electric RC Car
-#define RC_MAX_THROTTLE     1950
+#define RC_MAX_THROTTLE     1800
 
 // Define the delay between two RC reads
 #define RC_READ_INTERVAL  125000    // 8 HZ

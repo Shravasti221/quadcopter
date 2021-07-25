@@ -6,8 +6,8 @@
 #define MIN_ESC_DRIVE  1
 #define MAX_ESC_DRIVE  180
 
-#define MODEL_MAX 0
-#define MODEL_MIN 120
+#define MODEL_MAX 100
+#define MODEL_MIN 20
 #define MODEL_FLOAT 40
 
 //short for minimum/maximum ESC PWM in milli seconds

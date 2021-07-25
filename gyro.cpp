@@ -1,17 +1,18 @@
 #include "gyro.h"
 
-gyroscope::gyroscope():mpu6050(Wire){
+gyroscope::gyroscope():mpu6050(Wire, 0.1, 0.9){
         AccX = 0;
         AccY = 0;
         AccZ = 0;
         Xangle = 0;
         Yangle  = 0;
         Zangle = 0;
-        Wire.begin();
-        mpu6050.begin();
-        mpu6050.calcGyroOffsets(true);
+}
 
-    }
+void gyroscope::setup() {
+    mpu6050.begin();
+    mpu6050.calcGyroOffsets(true);
+}
 
 int gyroscope::check_mpu(){
         mpu6050.update();
@@ -25,10 +26,7 @@ int gyroscope::check_mpu(){
 }
 
 void gyroscope::print_vals(){
-        Serial.print("\nangleX : ");
-        Serial.print(Xangle);
-        Serial.print("\tangleY : ");
-        Serial.print(Yangle);
-        Serial.print("\tangleZ : ");
-        Serial.println(Zangle);
+        Serial.print(" angleX : "); Serial.print(Xangle);
+        Serial.print(" angleY : "); Serial.print(Yangle);
+        // Serial.print(" angleZ : "); Serial.println(Zangle);
 }

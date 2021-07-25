@@ -37,6 +37,8 @@ motor::motor(int pin_no, int min_, int max_, int float_){
 
 void motor::set_pin(int pin_no){
   ESC.attach(pin_no, esc_drive_min, esc_drive_max);
+  ESC.write(0);
+  delay(100);
 }
 
 motor& motor::operator ++(){
@@ -60,16 +62,15 @@ motor& motor::operator -=(const int val){
 
 void motor::test(int motor_num_){
   indicate_glow();
-    #if DEBUG
-    Serial.print("Testing motor number ");  
+  #if DEBUG
+    Serial.print("Testing motor "); Serial.println(motor_num_);
   #endif
   
-  Serial.println(motor_num_);
-  ESC.write(20); //(esc_drive_float[LR_ESC_INDEX]);  //Rear Left
-  delay(2000);
+  ESC.write(50); //(esc_drive_float[LR_ESC_INDEX]);  //Rear Left
+  delay(500);
   indicate_off();
   ESC.write(1);
-  delay(1000);
+  delay(250);
 }
 
 void motor::float_(){

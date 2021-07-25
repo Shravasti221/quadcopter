@@ -146,10 +146,10 @@ int is_rc_alive() {
 #if DEBUG 
 void RC_print_vals() {
   // if a new throttle signal has been measured, lets print the value to serial, if not our code could carry on with some other processing 
-  Serial.print("Ailron: "); Serial.print(rc_aileron()); 
-  Serial.print(", Elevator: "); Serial.print(rc_elevator()); 
-  Serial.print(", Rudder: "); Serial.print(rc_rudder());
-  Serial.print(", Throttle: "); Serial.println(rc_throttle()); 
+  Serial.print(" Ailron: "); Serial.print(rc_aileron()); 
+  Serial.print(" Elevator: "); Serial.print(rc_elevator()); 
+  Serial.print(" Rudder: "); Serial.print(rc_rudder());
+  Serial.print(" Throttle: "); Serial.print(rc_throttle()); 
 }
 #endif
 
@@ -162,6 +162,8 @@ void calibrate_rc() {
   Serial.println(F("==================================================="));
   delay(1000);
   Serial.print(F("Checking for valid receiver signals."));
+  Serial.println(F("Bypassing RC calibrarion"));
+  return;
   //Wait 10 seconds until all receiver inputs are valid
   if (wait_for_receiver()) {
     Serial.println("Could not detect the receiver - exiting the program");
